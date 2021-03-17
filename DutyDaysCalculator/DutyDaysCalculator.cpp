@@ -6,10 +6,12 @@
 #include <cmath>
 
 using namespace boost;
+using namespace boost::gregorian;
+using namespace std;
 
 boost::gregorian::date getEasterSunday()
 {
-	boost::posix_time::ptime timeLocal = boost::posix_time::second_clock::local_time();
+	posix_time::ptime timeLocal = posix_time::second_clock::local_time();
 	int year = timeLocal.date().year();
 	int a = year % 19;//The remainder of the division of x by 19.
 	int b = year % 4;//The remainder of the division of x by 4.
@@ -24,20 +26,20 @@ boost::gregorian::date getEasterSunday()
 		sunday -= 31;
 	}
 
-	return boost::gregorian::date(timeLocal.date().year(), month, sunday);
+	return date(timeLocal.date().year(), month, sunday);
 }
 
-bool isWorkDay(boost::gregorian::date dateToCheck)
+bool isWorkDay(date dateToCheck)
 {
-	boost::posix_time::ptime timeLocal = boost::posix_time::second_clock::local_time();
-	boost::gregorian::date easterSunday = getEasterSunday();
+	posix_time::ptime timeLocal = boost::posix_time::second_clock::local_time();
+	date easterSunday = getEasterSunday();
 
-	boost::gregorian::days oneDay(1);
-	boost::gregorian::days twoDays(2);
-	boost::gregorian::days threeDays(3);
-	boost::gregorian::days tenDays(10);
-	boost::gregorian::days twentySixDays(26);
-	boost::gregorian::days thirtyNineDays(39);
+	days oneDay(1);
+	days twoDays(2);
+	days threeDays(3);
+	days tenDays(10);
+	days twentySixDays(26);
+	days thirtyNineDays(39);
 
 	if (dateToCheck.day_of_week() == boost::gregorian::Sunday || dateToCheck.day_of_week() == boost::gregorian::Saturday)
 		return false;
@@ -60,9 +62,9 @@ bool isWorkDay(boost::gregorian::date dateToCheck)
 		return false;
 	if (dateToCheck == (easterSunday + thirtyNineDays + tenDays + oneDay)) // 2. Pinsedag
 		return false;
-	if (dateToCheck == boost::gregorian::date(timeLocal.date().year(), 12, 26)) // Nytårsdag
+	if (dateToCheck == date(timeLocal.date().year(), 12, 26)) // Nytårsdag
 		return false;
-	if (dateToCheck == boost::gregorian::date(timeLocal.date().year(), 12, 25)) // Nytårsdag
+	if (dateToCheck == date(timeLocal.date().year(), 12, 25)) // Nytårsdag
 		return false;
 
 	return true;
@@ -72,28 +74,28 @@ bool isWorkDay(boost::gregorian::date dateToCheck)
 
 int main()
 {
-	std::cout << "Greetings!\n";
-	std::cout << "All dates should be in the following format: dd-mm-yyyy\n";
-	std::cout << "Enter the first day of the shift:\n";
+	cout << "|-------------------------------------------------------------------------------------|\n";
+	cout << "| Greetings!                                                                          |\n";
+	cout << "| All dates should be in the following format: dd-mm-yyyy                             |\n";
+	cout << "|                                                                                     |\n";
+	cout << "| Enter the first day of the shift:                                                   |\n";
 
 	// Startdate
-	std::string inputStartDateString;
-	std::cin >> inputStartDateString;
-	std::cout << "You entered: " << inputStartDateString << "\n";
-	boost::gregorian::date startDate = boost::gregorian::from_uk_string(inputStartDateString);
+	string inputStartDateString;
+	cin >> inputStartDateString;
+	date startDate = from_uk_string(inputStartDateString);
 
 	// Enddate
-	std::cout << "Enter the last day of the shift:\n";
-	std::string inputEndDateString;
-	std::cin >> inputEndDateString;
-	std::cout << "You entered: " << inputEndDateString << "\n";
-	boost::gregorian::date endDate = boost::gregorian::from_uk_string(inputEndDateString);
+	cout << "| Enter the last day of the shift:                                                    |\n";
+	string inputEndDateString;
+	cin >> inputEndDateString;
+	date endDate = from_uk_string(inputEndDateString);
 
 	int workDays = 0;
 	int offDays = 0;
 
-	boost::gregorian::date currentDate = startDate;
-	boost::gregorian::days oneDay(1);
+	date currentDate = startDate;
+	days oneDay(1);
 
 	while (endDate > currentDate)
 	{
@@ -103,6 +105,12 @@ int main()
 			offDays++;
 		currentDate = currentDate + oneDay;
 	}
-	std::cout << workDays << " arbejdsdage\n";
-	std::cout << offDays << " fridage\n";
+
+	cout << "|                                                                                     |\n";
+	cout << "| " << workDays << " workdays                                                                         |\n";
+	cout << "| " << offDays << " offdays                                                                          |\n";
+	cout << "| If you took any days off, be it sickness, holiday, or something else.               |\n";
+	cout << "| Then remember to add convert any relevant workdays manually,                        |\n";
+	cout << "| as the system only handles weekends, and danish holidays.                           |\n";
+	cout << "|-------------------------------------------------------------------------------------|\n";
 }
