@@ -4,6 +4,7 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <cmath>
+#include "DutyDaysCalculator.h"
 
 using namespace boost;
 
@@ -27,7 +28,7 @@ boost::gregorian::date getEasterSunday()
 	return boost::gregorian::date(timeLocal.date().year(), month, sunday);
 }
 
-bool isWorkDay(boost::gregorian::date dateToCheck)
+bool DutyDaysCalculator::isWorkDay(boost::gregorian::date dateToCheck)
 {
 	boost::posix_time::ptime timeLocal = boost::posix_time::second_clock::local_time();
 	boost::gregorian::date easterSunday = getEasterSunday();
@@ -72,6 +73,7 @@ bool isWorkDay(boost::gregorian::date dateToCheck)
 
 int main()
 {
+	DutyDaysCalculator dutyDaysCalculator;
 	std::cout << "Greetings!\n";
 	std::cout << "All dates should be in the following format: dd-mm-yyyy\n";
 	std::cout << "Enter the first day of the shift:\n";
@@ -97,7 +99,7 @@ int main()
 
 	while (endDate > currentDate)
 	{
-		if (isWorkDay(currentDate))
+		if (dutyDaysCalculator.isWorkDay(currentDate))
 			workDays++;
 		else
 			offDays++;
