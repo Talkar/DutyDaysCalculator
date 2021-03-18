@@ -10,7 +10,7 @@ using namespace boost;
 using namespace boost::gregorian;
 using namespace std;
 
-boost::gregorian::date getEasterSunday()
+date getEasterSunday()
 {
 	posix_time::ptime timeLocal = posix_time::second_clock::local_time();
 	int year = timeLocal.date().year();
@@ -30,9 +30,9 @@ boost::gregorian::date getEasterSunday()
 	return date(timeLocal.date().year(), month, sunday);
 }
 
-bool DutyDaysCalculator::isWorkDay(boost::gregorian::date dateToCheck)
+bool DutyDaysCalculator::isWorkDay(date dateToCheck)
 {
-	posix_time::ptime timeLocal = boost::posix_time::second_clock::local_time();
+	posix_time::ptime timeLocal = posix_time::second_clock::local_time();
 	date easterSunday = getEasterSunday();
 
 	days oneDay(1);
@@ -42,18 +42,18 @@ bool DutyDaysCalculator::isWorkDay(boost::gregorian::date dateToCheck)
 	days twentySixDays(26);
 	days thirtyNineDays(39);
 
-	if (dateToCheck.day_of_week() == boost::gregorian::Sunday || dateToCheck.day_of_week() == boost::gregorian::Saturday)
+	if (dateToCheck.day_of_week() == Sunday || dateToCheck.day_of_week() == Saturday)
 		return false;
 
-	if (dateToCheck == boost::gregorian::date(timeLocal.date().year(), 1, 1)) // Nyt�rsdag
+	if (dateToCheck == date(timeLocal.date().year(), 1, 1)) // Nytårsdag
 		return false;
-	if (dateToCheck == (easterSunday - threeDays)) // Sk�rtorsdag
+	if (dateToCheck == (easterSunday - threeDays)) // Skærtorsdag
 		return false;
 	if (dateToCheck == (easterSunday - twoDays)) // Langfredag
 		return false;
-	if (dateToCheck == easterSunday) // P�skedag
+	if (dateToCheck == easterSunday) // Påskedag
 		return false;
-	if (dateToCheck == (easterSunday + oneDay)) // 2. p�skedag
+	if (dateToCheck == (easterSunday + oneDay)) // 2. påskedag
 		return false;
 	if (dateToCheck == (easterSunday + twentySixDays)) // Store bededag
 		return false;
@@ -63,9 +63,9 @@ bool DutyDaysCalculator::isWorkDay(boost::gregorian::date dateToCheck)
 		return false;
 	if (dateToCheck == (easterSunday + thirtyNineDays + tenDays + oneDay)) // 2. Pinsedag
 		return false;
-	if (dateToCheck == date(timeLocal.date().year(), 12, 26)) // Nyt�rsdag
+	if (dateToCheck == date(timeLocal.date().year(), 12, 26)) // Nytårsdag
 		return false;
-	if (dateToCheck == date(timeLocal.date().year(), 12, 25)) // Nyt�rsdag
+	if (dateToCheck == date(timeLocal.date().year(), 12, 25)) // Nytårsdag
 		return false;
 
 	return true;
